@@ -2,9 +2,9 @@
 'use client'
 
 // ProfessionalForm.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateProfessionalDetails, selectProfessionalDetails,setDropdownOption} from '../../../../redux/slices/profDetails'
+import { updateProfessionalDetails, selectProfessionalDetails, setDropdownOption } from '../../../../redux/slices/profDetails'
 
 import { Form, Input, Button, Select, Col, Row } from 'antd';
 
@@ -17,30 +17,66 @@ const ProfessionalInfo = ({ tab, setTab }) => {
   const professionalDetails = useSelector(selectProfessionalDetails);
 
   const handleChange = (name, value) => {
+    console.log(name,value)
     dispatch(updateProfessionalDetails({ [name]: value }));
   };
 
   const handleSubmit = () => {
     // Save data to local storage
+    console.log("succcess", professionalDetails)
     localStorage.setItem(
       "professionalDetails",
       JSON.stringify(professionalDetails)
     );
-    alert("data stored in local storage");
+    // alert("data stored in local storage");
   };
   const handleSelectChange = (value) => {
+    console.log(value)
     dispatch(setDropdownOption(value));
   };
   const { selectedOption } = useSelector(selectProfessionalDetails);
 
   const router = useRouter();
+  const[ value,setvalue]=useState([])
+  const axios = require('axios');
+  let data = JSON.stringify({
+    "designation_id": "hi hello",
+    "pf": professionalDetails.pfNumber,
+    "uan": professionalDetails.uanNumber,
+    "department_id": professionalDetails.Department,
+    "reporting_manager_id": professionalDetails.Reporting_Manager,
+    "work_location": value.Work_location,
+    "start_date": "2024-02-22T12:00:00Z",
+    "emp_id": "a070ec06-d2fc-455a-bb03-49e0f8583aa1"
+  });
+
+  let config = {
+    method: 'put',
+    maxBodyLength: Infinity,
+    url: 'https://bwppdwpoab.execute-api.us-east-1.amazonaws.com/dev/employee/professionalInfo',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    data: data
+  };
+
+  axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+
   return (
     <Form
       style={{ padding: "20px", margin: "auto", border: "2px solid #eee" }}
       className=" justify-center items-center w-[80%] "
       onFinish={handleSubmit}
-      // Adjust the span value based on your layout
-      // Adjust the span value based on your layout
+    // Adjust the span value based on your layout
+    // Adjust the span value based on your layout
     >
       <Form.Item
         label="Designation"
@@ -50,6 +86,8 @@ const ProfessionalInfo = ({ tab, setTab }) => {
         <Select
           className="rounded-none h-11 font-semibold mb-5  w-[25rem]"
           placeholder="Select Designation"
+          value={selectedOption}
+          onChange={handleSelectChange}
         >
           <Option value="option10">Option 10</Option>
           <Option value="option11">Option 11</Option>
@@ -74,7 +112,7 @@ const ProfessionalInfo = ({ tab, setTab }) => {
               className="h-11"
               type="text"
               value={professionalDetails.pfNumber}
-              onChange={(e) => handleChange("pfNumber", e.target.value)}
+              onChange={(e) => handleChange("pfNumber", e.value)}
             />
           </Form.Item>
         </Col>
@@ -102,14 +140,14 @@ const ProfessionalInfo = ({ tab, setTab }) => {
 
       <Form.Item
         label="Department"
-        name="department"
+        name="Department"
         rules={[{ required: true, message: "Please select a department." }]}
       >
         <Select
           placeholder="Select Department"
           className="rounded-none mb-5 font-semibold h-11"
-          value={selectedOption}
-          onChange={handleSelectChange}
+          value={professionalDetails.Department}
+              onChange={(e) => {handleChange("Department", value)}}
         >
           <Option value="option1">Option 1</Option>
           <Option value="option2">Option 2</Option>
@@ -119,7 +157,7 @@ const ProfessionalInfo = ({ tab, setTab }) => {
 
       <Form.Item
         label="Reporting Manager"
-        name="reportingManager"
+        name="Reporting_Manager"
         rules={[
           { required: true, message: "Please select a reporting manager." },
         ]}
@@ -127,6 +165,8 @@ const ProfessionalInfo = ({ tab, setTab }) => {
         <Select
           placeholder="Select Reporting Manager"
           className="h-11 rounded-none mb-5"
+          value={professionalDetails.Reporting_Manager}
+              onChange={(e) => {handleChange("Reporting_Manager", value)}}
         >
           <Option value="option4">Option 4</Option>
           <Option value="option5">Option 5</Option>
@@ -136,12 +176,14 @@ const ProfessionalInfo = ({ tab, setTab }) => {
 
       <Form.Item
         label="Work Location"
-        name="workLocation"
+        name="Work_Location"
         rules={[{ required: true, message: "Please select a work location." }]}
       >
         <Select
           placeholder="Select Work Location"
           className="h-11 rounded-none"
+          value={professionalDetails.Work_Location}
+          onChange={(e) => {handleChange("Work_Location", value)}}
         >
           <Option value="option7">Option 7</Option>
           <Option value="option8">Option 8</Option>

@@ -6,9 +6,13 @@ import { createSlice } from '@reduxjs/toolkit';
 export const slice = createSlice({
   name: 'professionalDetails',
   initialState: {
-    uanNumber: '',
+    Designation:'',
     pfNumber: '',
-    selectedOption:'',
+    uanNumber: '',
+    Department:'',
+    Reporting_Manager:'',
+    Work_Location:'', 
+        
   },
   reducers: {
     updateProfessionalDetails: (state, action) => {

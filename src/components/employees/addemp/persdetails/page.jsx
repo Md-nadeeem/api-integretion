@@ -14,6 +14,7 @@ const PersonalInformation = ({ tab, setTab }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const Details = useSelector((state) => state.personalDetails) || {};
+  
 
   useEffect(() => {
     if (Details) {
