@@ -6,10 +6,10 @@ import { createSlice } from '@reduxjs/toolkit';
 export const slice = createSlice({
   name: 'professionalDetails',
   initialState: {
-    Designation:'',
+    designation: '',
     pfNumber: '',
     uanNumber: '',
-    Department:'',
+    department: '',
     Reporting_Manager:'',
     Work_Location:'', 
         

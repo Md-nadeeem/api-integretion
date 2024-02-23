@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import personalDetails, {
   setpersonalDetails,
 } from "@/redux/slices/personalDetails";
+import { useForm } from 'antd/lib/form/Form';
 import { useRouter } from "next/navigation";
 
 const { Option } = Select;
@@ -12,9 +13,10 @@ const { Option } = Select;
 const PersonalInformation = ({ tab, setTab }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
-  const Details = useSelector((state) => state.personalDetails) || {};
+  const [form] = useForm(); 
   
+  const Details = useSelector((state) => state.personalDetails) || {};
+
 
   useEffect(() => {
     if (Details) {

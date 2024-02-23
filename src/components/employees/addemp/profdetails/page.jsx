@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProfessionalDetails, selectProfessionalDetails, setDropdownOption } from '../../../../redux/slices/profDetails'
 
 import { Form, Input, Button, Select, Col, Row } from 'antd';
+import { useForm } from 'antd/lib/form/Form';
 
 import { useRouter } from 'next/navigation';
 const { Option } = Select;
@@ -15,6 +16,7 @@ const numberRegex = /^[0-9]{5,}$/; // Ensure at least 5 digits
 const ProfessionalInfo = ({ tab, setTab }) => {
   const dispatch = useDispatch();
   const professionalDetails = useSelector(selectProfessionalDetails);
+  const [form] = useForm(); 
 
   const handleChange = (name, value) => {
     console.log(name,value)
@@ -30,22 +32,22 @@ const ProfessionalInfo = ({ tab, setTab }) => {
     );
     // alert("data stored in local storage");
   };
-  const handleSelectChange = (value) => {
-    console.log(value)
-    dispatch(setDropdownOption(value));
-  };
+  const handleSelectChange = (name, value) => {
+    dispatch(setDropdownOption({[name]: value}));
+};
   const { selectedOption } = useSelector(selectProfessionalDetails);
 
   const router = useRouter();
-  const[ value,setvalue]=useState([])
+
+  const[ value,setvalue]=useState({})
   const axios = require('axios');
   let data = JSON.stringify({
-    "designation_id": "hi hello",
+    "designation": professionalDetails.designation,
     "pf": professionalDetails.pfNumber,
     "uan": professionalDetails.uanNumber,
-    "department_id": professionalDetails.Department,
+    "department": professionalDetails.department,
     "reporting_manager_id": professionalDetails.Reporting_Manager,
-    "work_location": value.Work_location,
+    "work_location": professionalDetails.Work_Location,
     "start_date": "2024-02-22T12:00:00Z",
     "emp_id": "a070ec06-d2fc-455a-bb03-49e0f8583aa1"
   });
@@ -83,11 +85,11 @@ const ProfessionalInfo = ({ tab, setTab }) => {
         name="designation"
         rules={[{ required: true, message: "Please select a designation." }]}
       >
-        <Select
+      <Select
           className="rounded-none h-11 font-semibold mb-5  w-[25rem]"
           placeholder="Select Designation"
-          value={selectedOption}
-          onChange={handleSelectChange}
+          value={professionalDetails.designation}
+          onChange={(value) => handleChange("designation", value)}
         >
           <Option value="option10">Option 10</Option>
           <Option value="option11">Option 11</Option>
@@ -112,7 +114,7 @@ const ProfessionalInfo = ({ tab, setTab }) => {
               className="h-11"
               type="text"
               value={professionalDetails.pfNumber}
-              onChange={(e) => handleChange("pfNumber", e.value)}
+              onChange={(e) => handleChange("pfNumber", e.target.value)}
             />
           </Form.Item>
         </Col>
@@ -143,12 +145,12 @@ const ProfessionalInfo = ({ tab, setTab }) => {
         name="Department"
         rules={[{ required: true, message: "Please select a department." }]}
       >
-        <Select
-          placeholder="Select Department"
-          className="rounded-none mb-5 font-semibold h-11"
-          value={professionalDetails.Department}
-              onChange={(e) => {handleChange("Department", value)}}
-        >
+       <Select
+            placeholder="Select Department"
+            className="rounded-none mb-5 font-semibold h-11"
+            value={professionalDetails.department}
+            onChange={(value) => handleChange("department", value)}
+          >
           <Option value="option1">Option 1</Option>
           <Option value="option2">Option 2</Option>
           <Option value="option3">Option 3</Option>
@@ -162,12 +164,12 @@ const ProfessionalInfo = ({ tab, setTab }) => {
           { required: true, message: "Please select a reporting manager." },
         ]}
       >
-        <Select
-          placeholder="Select Reporting Manager"
-          className="h-11 rounded-none mb-5"
-          value={professionalDetails.Reporting_Manager}
-              onChange={(e) => {handleChange("Reporting_Manager", value)}}
-        >
+       <Select
+  placeholder="Select Reporting Manager"
+  className="h-11 rounded-none mb-5"
+  value={professionalDetails.Reporting_Manager}
+  onChange={(value) => handleChange("Reporting_Manager", value)}
+>
           <Option value="option4">Option 4</Option>
           <Option value="option5">Option 5</Option>
           <Option value="option6">Option 6</Option>
@@ -179,12 +181,12 @@ const ProfessionalInfo = ({ tab, setTab }) => {
         name="Work_Location"
         rules={[{ required: true, message: "Please select a work location." }]}
       >
-        <Select
-          placeholder="Select Work Location"
-          className="h-11 rounded-none"
-          value={professionalDetails.Work_Location}
-          onChange={(e) => {handleChange("Work_Location", value)}}
-        >
+         <Select
+    placeholder="Select Work Location"
+    className="h-11 rounded-none"
+    value={professionalDetails.Work_Location}
+    onChange={(value) => handleChange("Work_Location", value)} // Corrected here
+  >
           <Option value="option7">Option 7</Option>
           <Option value="option8">Option 8</Option>
           <Option value="option9">Option 9</Option>
